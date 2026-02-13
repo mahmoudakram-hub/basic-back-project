@@ -35,7 +35,7 @@ model SysRole {
 }
 
 model RolePermission {
-  user_role        SysRole           @relation(fields: [sysUserRoleId], references: [id], onDelete: Cascade)
+  user_role        SysRole           @relation(fields: [sysUserRoleId], references: [id], onDelete: Restrict)
   user_permissions SystemPermissions @relation(fields: [sysPermissions], references: [id])
   sysPermissions   String
   sysUserRoleId    String
@@ -62,7 +62,7 @@ model SysUser {
   lastLogin     DateTime?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
-  sysUserRole   SysRole?  @relation(fields: [sysUserRoleId], references: [id], onDelete: Cascade)
+  sysUserRole   SysRole?  @relation(fields: [sysUserRoleId], references: [id], onDelete: Restrict)
   sysUserRoleId String?
 
   @@map("sys_user")
