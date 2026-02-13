@@ -13,19 +13,57 @@ datasource db {
   provider = "mysql"
 }
 
-
-model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-  posts Post[]
+enum SysRoleActions {
+  CREATE
+  READ
+  UPDATE
+  DELETE
 }
 
-model Post {
-  id        Int     @id @default(autoincrement())
-  title     String
-  content   String? @db.Text
-  published Boolean @default(false)
-  author    User    @relation(fields: [authorId], references: [id])
-  authorId  Int
+enum Models {
+  user
+}
+
+model SysRole {
+  id                String           @unique @default(uuid())
+  name              String
+  description       String
+  users             SysUser[]
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  sysRolePermission RolePermission[]
+}
+
+model RolePermission {
+  user_role        SysRole           @relation(fields: [sysUserRoleId], references: [id], onDelete: Cascade)
+  user_permissions SystemPermissions @relation(fields: [sysPermissions], references: [id])
+  sysPermissions   String
+  sysUserRoleId    String
+
+  @@id([sysPermissions, sysUserRoleId])
+}
+
+model SystemPermissions {
+  id                String           @unique @default(uuid())
+  model             Models
+  action            SysRoleActions
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  sysRolePermission RolePermission[]
+}
+
+model SysUser {
+  id            String    @unique @default(uuid())
+  name          String
+  email         String    @unique
+  phone         String?   @default("")
+  password      String
+  isActive      Boolean
+  lastLogin     DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  sysUserRole   SysRole?  @relation(fields: [sysUserRoleId], references: [id], onDelete: Cascade)
+  sysUserRoleId String?
+
+  @@map("sys_user")
 }
