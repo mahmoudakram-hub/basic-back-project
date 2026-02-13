@@ -28,19 +28,19 @@ model SysRole {
   id                String           @unique @default(uuid())
   name              String
   description       String
+  sysRolePermission RolePermission[]
   users             SysUser[]
   createdAt         DateTime         @default(now())
   updatedAt         DateTime         @updatedAt
-  sysRolePermission RolePermission[]
 }
 
 model RolePermission {
   user_role        SysRole           @relation(fields: [sysUserRoleId], references: [id], onDelete: Restrict)
-  user_permissions SystemPermissions @relation(fields: [sysPermissions], references: [id])
-  sysPermissions   String
+  user_permissions SystemPermissions @relation(fields: [sysPermissionId], references: [id])
+  sysPermissionId  String
   sysUserRoleId    String
 
-  @@id([sysPermissions, sysUserRoleId])
+  @@id([sysPermissionId, sysUserRoleId])
 }
 
 model SystemPermissions {
