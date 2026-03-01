@@ -1,19 +1,3 @@
-/*
-  Warnings:
-
-  - You are about to drop the `post` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `user` table. If the table is not empty, all the data it contains will be lost.
-
-*/
--- DropForeignKey
-ALTER TABLE `post` DROP FOREIGN KEY `Post_authorId_fkey`;
-
--- DropTable
-DROP TABLE `post`;
-
--- DropTable
-DROP TABLE `user`;
-
 -- CreateTable
 CREATE TABLE `SysRole` (
     `id` VARCHAR(191) NOT NULL,
@@ -27,10 +11,10 @@ CREATE TABLE `SysRole` (
 
 -- CreateTable
 CREATE TABLE `RolePermission` (
-    `sysPermissions` VARCHAR(191) NOT NULL,
+    `sysPermissionId` VARCHAR(191) NOT NULL,
     `sysUserRoleId` VARCHAR(191) NOT NULL,
 
-    PRIMARY KEY (`sysPermissions`, `sysUserRoleId`)
+    PRIMARY KEY (`sysPermissionId`, `sysUserRoleId`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
@@ -62,10 +46,10 @@ CREATE TABLE `sys_user` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- AddForeignKey
-ALTER TABLE `RolePermission` ADD CONSTRAINT `RolePermission_sysUserRoleId_fkey` FOREIGN KEY (`sysUserRoleId`) REFERENCES `SysRole`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `RolePermission` ADD CONSTRAINT `RolePermission_sysUserRoleId_fkey` FOREIGN KEY (`sysUserRoleId`) REFERENCES `SysRole`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `RolePermission` ADD CONSTRAINT `RolePermission_sysPermissions_fkey` FOREIGN KEY (`sysPermissions`) REFERENCES `SystemPermissions`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `RolePermission` ADD CONSTRAINT `RolePermission_sysPermissionId_fkey` FOREIGN KEY (`sysPermissionId`) REFERENCES `SystemPermissions`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `sys_user` ADD CONSTRAINT `sys_user_sysUserRoleId_fkey` FOREIGN KEY (`sysUserRoleId`) REFERENCES `SysRole`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `sys_user` ADD CONSTRAINT `sys_user_sysUserRoleId_fkey` FOREIGN KEY (`sysUserRoleId`) REFERENCES `SysRole`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
